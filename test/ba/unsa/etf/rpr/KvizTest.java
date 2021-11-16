@@ -12,7 +12,7 @@ class KvizTest {
     private static List<Pitanje> pitanja;
 
     @BeforeAll
-    static void setUp(){
+    static void setUp() {
         Pitanje pitanje1 = new Pitanje("Koja od boja se moze naci na semaforu?", 3);
         pitanje1.dodajOdgovor("a", "zuta", true);
         pitanje1.dodajOdgovor("b", "zelena", true);
@@ -30,7 +30,7 @@ class KvizTest {
     }
 
     @BeforeEach
-    void setUpTest(){
+    void setUpTest() {
         kviz = new Kviz("Kviz opsteg znanja", SistemBodovanja.BINARNO);
         pitanja.forEach(pitanje -> kviz.dodajPitanje(pitanje));
         pitanja.get(0).setBrojPoena(3);
@@ -38,7 +38,7 @@ class KvizTest {
     }
 
     @Test
-    public void testKonstruktor1(){
+    public void testKonstruktor1() {
         kviz = new Kviz("Moj kviz", SistemBodovanja.PARCIJALNO);
         assertAll(
                 () -> assertEquals("Moj kviz", kviz.getNaziv()),
@@ -48,24 +48,24 @@ class KvizTest {
     }
 
     @Test
-    public void testKonstruktor2(){
+    public void testKonstruktor2() {
         assertEquals(2, kviz.getPitanja().size());
     }
 
     @Test
-    public void testDodajPitanje1(){
+    public void testDodajPitanje1() {
         Pitanje pitanje3 = new Pitanje("Koliko je 2+2?", 1.5);
         kviz.dodajPitanje(pitanje3);
         assertEquals(3, kviz.getPitanja().size());
     }
 
     @Test
-    public void testDodajPitanje2(){
+    public void testDodajPitanje2() {
         Pitanje pitanje3 = new Pitanje("Koliko je 2+2?", 1.5);
         kviz.dodajPitanje(pitanje3);
         Pitanje pitanje4 = new Pitanje("kolikO je 2+2?", 1.5);
         Exception exception = assertThrows(IllegalArgumentException.class,
-                () ->  kviz.dodajPitanje(pitanje4));
+                () -> kviz.dodajPitanje(pitanje4));
 
         assertAll(
                 () -> assertEquals("Ne možete dodati pitanje sa tekstom koji već postoji",
@@ -75,11 +75,11 @@ class KvizTest {
     }
 
     @Test
-    public void testDodajPitanje3(){
+    public void testDodajPitanje3() {
         Pitanje pitanje3 = new Pitanje("Koliko je 2+2?", 1.5);
         kviz.dodajPitanje(pitanje3);
         Exception exception = assertThrows(IllegalArgumentException.class,
-                () ->  kviz.dodajPitanje(pitanje3));
+                () -> kviz.dodajPitanje(pitanje3));
 
         assertAll(
                 () -> assertEquals("Ne možete dodati pitanje sa tekstom koji već postoji",
@@ -89,7 +89,7 @@ class KvizTest {
     }
 
     @Test
-    public void testSetteri(){
+    public void testSetteri() {
         kviz.setSistemBodovanja(SistemBodovanja.PARCIJALNO);
         kviz.setNaziv("Moj kviz");
         assertAll(
@@ -99,7 +99,7 @@ class KvizTest {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
         //prikaz cijelog kviza uz oznacene tacne odgovore
         String tacno = "Kviz \"Kviz opsteg znanja\" boduje se binarno. Pitanja:\n" +
                 "1. Koja od boja se moze naci na semaforu?(3.0b)\n" +
@@ -121,6 +121,7 @@ class KvizTest {
                         kviz.toString())
         );
     }
+
 
     @Test
     public void testPredajKviz1(){

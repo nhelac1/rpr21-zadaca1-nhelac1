@@ -84,7 +84,7 @@ class PitanjeTest {
         );
     }
 
-    @Test
+   /* @Test
     public void testIzracunajPoene1(){
         Pitanje pitanje = new Pitanje("Koji je podrazumijevani scope u Javi?", 2);
         pitanje.dodajOdgovor("a", "package", true);
@@ -278,7 +278,7 @@ class PitanjeTest {
 
         assertEquals("Postoje duplikati među odabranim odgovorima", exception.getMessage());
     }
-
+*/
     @Test
     public void toStringTest(){
         Pitanje pitanje = new Pitanje("Koja od boja se moze naci na semaforu?", 4);
