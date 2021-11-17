@@ -38,9 +38,10 @@ public class Kviz {
     public void setSistemBodovanja(SistemBodovanja sistemBodovanja) {
         this.sistemBodovanja = sistemBodovanja;
     }
+
     public void dodajPitanje(Pitanje p) {
         for (Pitanje vr : pitanja) {
-            if (vr.equals(p)) {//provjera da li pitanje postoji
+            if (vr.getTekst().equalsIgnoreCase(p.getTekst())) {
                 throw new IllegalArgumentException("Ne možete dodati pitanje sa tekstom koji već postoji"); //bacit ce izuzetak ukoliko ima isto pitanje
             }
         }
@@ -51,12 +52,13 @@ public class Kviz {
     @Override
     public String toString() {
         String s = ""; //prazan string
-        s = s + "Kviz " + "\"" + naziv + "\"" + " boduje se " + sistemBodovanja + "." + " Pitanja:";
+        s = s + "Kviz " + "\"" + naziv + "\"" + " boduje se " + sistemBodovanja.MalaSlova() + ". Pitanja:";
         int i = 0;
         for (Pitanje p : pitanja) {
             s = s + "\n"  + (i+1) + ". " + p.getTekst() + "(" + p.getBrojPoena() + "b)";
-            for (String odg : p.getOdgovori().keySet()) {
-                s = s + "\n" + "\t" + odg + ": " + p.getTekst().toString();
+            for (String id : p.getOdgovori().keySet()) {
+                s = s + "\n" + "\t" + id + ": " + p.getOdgovori().get(id).getTekstOdgovora() ;
+                if (p.getOdgovori().get(id).isTacno()) s = s + "(T)";
             }
             i++;
             if (i != brojPitanja) s = s + "\n";
@@ -66,7 +68,7 @@ public class Kviz {
     }
     public RezultatKviza predajKviz(Map<Pitanje, ArrayList<String>> odg) {
         RezultatKviza rezultat = new RezultatKviza(this);
-        Map<Pitanje, Double> b = new HashMap<>();
+        HashMap<Pitanje, Double> b = new HashMap<>();
         double ukupno = 0;
         for (Pitanje p : pitanja) {
             Double x = 0.0;

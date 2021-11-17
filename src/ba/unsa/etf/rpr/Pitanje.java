@@ -1,6 +1,5 @@
 package ba.unsa.etf.rpr;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class Pitanje {
@@ -50,9 +49,11 @@ public class Pitanje {
     public void dodajOdgovor(String id, String tekst, boolean tacno) {
         if (odgovori.containsKey(id)) //provjera da li id postoji
             throw new IllegalArgumentException("Id odgovora mora biti jedinstven"); //bacit ce izuzetak ukoliko ima vec postojeci id
+
         Odgovor o = new Odgovor(tekst, tacno);
         odgovori.put(id, o); //(a,10),(b,2) - u kolekciju odgovora dodajemo odgovor sa tim id
         brojOdgovora = brojOdgovora + 1; //broj odgovora se povecava jer je id ispravan
+
     }
 
     public void obrisiOdgovor(String id) {
@@ -79,69 +80,58 @@ public class Pitanje {
         }
         return s;
     }
-    public double izracunajPoene(ArrayList<String> idevi, SistemBodovanja sb) { //lista id-eva
 
+
+    public double izracunajPoene(List<String> idevi, SistemBodovanja sb) { //lista id-eva
         boolean provjera = false; //za pretragu
         for (String i : idevi) {
-            for (String o : odgovori.keySet()){ //id je tipa string
+            for (String o : odgovori.keySet()) { //id je tipa string
                 if (i == o) provjera = true;
             }
-            if (!provjera) //provjera == false
+            if (provjera == false) //provjera == false
                 throw new IllegalArgumentException("Odabran je nepostojeći odgovor");
             provjera = false;
         }
 
-        int brojac = 0;
-        for (String i : idevi) {
-            for (String o : odgovori.keySet()){ //id je tipa string
-                if (i == o) brojac++;
-            }
-            if (brojac > 1) //provjera == false
-                throw new IllegalArgumentException("Postoje duplikati među odabranim odgovorima");
-            brojac = 0;
+        Set<String> set = new HashSet<>(idevi);
+        if (set.size() != idevi.size())
+            throw new IllegalArgumentException("Postoje duplikati među odabranim odgovorima");
+
+        //Racunanje bodova po sistemu bodovanja
+        int tacnih = 0, netacnih = 0, ukupno = 0;
+        int tacnihZ = 0, netacnihZ = 0, ukupnoZ = 0;
+        for (Map.Entry<String, Odgovor> odg : odgovori.entrySet()) {
+            if (odg.getValue().isTacno()) {
+                tacnih = tacnih + 1;
+                if (idevi.contains(odg.getKey()))
+                    tacnihZ = tacnihZ + 1;
+            } else
+                netacnih = netacnih + 1;
         }
 
-        int Tacnih = 0, Zaokruzenih = 0;
-        double poeni = 0;
-        if (sb.equals(SistemBodovanja.BINARNO)) {
-            if (Tacnih != idevi.size())
-                return 0;
-            else {
-                for (int i = 0; i< idevi.size(); i++) {
-                    if (!odgovori.get(idevi.get(i)).isTacno())
-                        return 0;
-                }
-                poeni = brojPoena;
-            }
-        }
-        if (sb.equals(SistemBodovanja.PARCIJALNO)) {
-            for (int i = 0; i < idevi.size(); i++) {
-                if (!odgovori.get(idevi.get(i)).isTacno())
+            ukupno = tacnih + netacnih;
+            ukupnoZ = idevi.size(); //zaokruzeni odgovori i tacni i netacni
+            netacnihZ = ukupnoZ - tacnihZ;
+
+            if (sb.equals(SistemBodovanja.BINARNO)) {
+                if (tacnihZ == tacnih && netacnihZ == 0) //Ako je korisnik zaokruzio samo tacne odgovore
+                    return brojPoena;
+                else return 0.;
+            } else if (sb.equals(SistemBodovanja.PARCIJALNO)) {
+                if (tacnihZ == 0 && netacnihZ > 0)
                     return 0;
+                else if (tacnihZ != tacnih && netacnihZ == 0)
+                    return ((brojPoena/ukupno)*tacnihZ);
+                else if (tacnihZ == tacnih && netacnihZ == 0)
+                    return  brojPoena;
+            } else if (sb.equals(SistemBodovanja.PARCIJALNO_SA_NEGATIVNIM)) {
+                if (tacnihZ == tacnih && netacnihZ == 0)
+                    return  brojPoena;
+                else if (tacnihZ != tacnih && netacnihZ == 0)
+                    return ((brojPoena/ukupno)*tacnihZ);
+                else if (netacnihZ > 0)
+                    return (-(brojPoena/2.));
             }
-            if (Tacnih == idevi.size())
-                return brojPoena;
-            else
-                return (brojPoena/odgovori.size())* idevi.size();
-        }
-        if (sb.equals(SistemBodovanja.PARCIJALNO_SA_NEGATIVNIM)) {
-            int T = 0, N = 0;
-            for (int i = 0; i <idevi.size(); i++) {
-                if (odgovori.get(idevi.get(i)).isTacno())
-                    T++;
-            }
-            for (int i = 0; i <idevi.size(); i++) {
-                if (!odgovori.get(idevi.get(i)).isTacno())
-                N++;
-            }
-            if (T == odgovori.size() && N == 0)
-                return brojPoena;
-            else if (N != 0)
-                return -(brojPoena/2.);
-            else
-                return (brojPoena/odgovori.size())*T;
-        }
         return 0;
     }
-
 }

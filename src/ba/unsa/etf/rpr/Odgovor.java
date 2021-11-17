@@ -25,7 +25,7 @@ public class Odgovor {
     }
 
     @Override
-    public boolean equals(Object o) { //zbog HashMape za neprimitivni tip (kada su 2 odgovora jenaka)
+    public boolean equals(Object o) { //zbog HashMape za neprimitivni tip (kada su 2 odgovora jednaka)
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Odgovor odgovor = (Odgovor) o;

@@ -6,7 +6,7 @@ import java.util.Map;
 public class RezultatKviza {
     private Kviz kviz;
     private double total; //ukupan broj bodova
-    private Map<Pitanje, Double> bodovi = new HashMap<>();;
+    private HashMap<Pitanje, Double> bodovi = new HashMap<>();
 
     public RezultatKviza(Kviz kviz) {
         this.kviz = kviz;
@@ -29,20 +29,20 @@ public class RezultatKviza {
         this.total = total;
     }
 
-    public Map<Pitanje, Double> getBodovi() {
+    public HashMap<Pitanje, Double> getBodovi() {
         return bodovi;
     }
 
-    public void setBodovi(Map<Pitanje, Double> bodovi) {
+    public void setBodovi(HashMap<Pitanje, Double> bodovi) {
         this.bodovi = bodovi;
     }
 
     @Override
     public String toString() {
-        String s = "" ;
-        s = s + ("Na kvizu \"" + kviz + "\" ostvarili ste ukupno " + total + "." + " poena. Raspored po pitanjima:");
+        String s = "";
+        s =  s + "Na kvizu \"" + kviz.getNaziv() + "\" ostvarili ste ukupno " + total + " poena. Raspored po pitanjima:";
         for (Map.Entry<Pitanje, Double> b : bodovi.entrySet()) {
-            s = s + "\n" + b.getKey().getTekst() + " - " + b.getValue().toString() + "b";
+            s = s + "\n" + b.getKey().getTekst() + " - " + b.getValue() + "b";
         }
         return s;
     }

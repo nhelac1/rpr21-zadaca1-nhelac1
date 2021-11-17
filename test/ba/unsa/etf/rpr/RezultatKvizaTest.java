@@ -64,7 +64,7 @@ class RezultatKvizaTest {
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
         Map<Pitanje, ArrayList<String>> zaokruzeniOdgovori = new HashMap<>();
         zaokruzeniOdgovori.put(pitanja.get(0), new ArrayList<>(List.of("a", "c", "b"))); //3
         zaokruzeniOdgovori.put(pitanja.get(1), new ArrayList<>(List.of("c"))); //0
@@ -80,6 +80,6 @@ class RezultatKvizaTest {
 
         List<String> moguciTacni = new ArrayList<>(List.of(rezultat1, rezultat2));
         assertTrue(moguciTacni.contains(rezultatKviza.toString()));
-    }
 
+    }
 }
